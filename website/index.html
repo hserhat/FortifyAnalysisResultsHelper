@@ -1,0 +1,652 @@
+
+<!doctype html>
+<html  lang="en">
+
+<head >
+    <!-- Required meta tags -->
+    <meta  charset="utf-8">
+    <meta  name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.rtl.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.silver.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.mobile.all.min.css">
+    <script type="application/json" src="jsonData.json"></script>
+    <link href="css/numberedtextarea.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.2.620/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.default.min.css">
+    <script src="https://kendo.cdn.telerik.com/2018.2.620/js/angular.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.2.620/js/jszip.min.js"></script>
+    <title >My Website!</title>
+</head>
+
+<body >
+    <nav  class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a  class="navbar-brand" href="#">
+         LOGO
+         </a>
+        <button  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span  class="navbar-toggler-icon"></span>
+         </button>
+        <div  class="collapse navbar-collapse" id="navbarNav">
+            <ul  class="navbar-nav ml-auto">
+                <li  class="nav-item">
+                    <a  class="sr-only">(current)</span></a>
+                </li>
+                <li  class="nav-item">
+                    <a  class="nav-link" href="#">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div  class="container-fluid" style="margin-top: 60px; height: 65%">
+        <!-- Zaafiyetlerin gözükeceği div alanı sol kısım-->
+        <div  class="row">
+            <div  class="col-sm-12 col-md-4 col-lg-4">
+                <div  style="height: 100%; border:1px solid black;">
+                    <script >
+                        var dataSourceLow = new kendo.data.HierarchicalDataSource({
+                            sort: { field: "text", dir: "asc" },
+                            data: [
+                                {% for f in dataLow %}
+                                    {
+                                        {% set temp = f[0].category %}
+                                        text: "{{temp}}",
+                                        items: [
+                                            {% for k in f %}
+                                                {
+                                                    text: "{{k.primaryFunction}}",
+                                                    id: "{{k.instanceid}}",
+                                                    filename: "{{k.filename}}",
+                                                    line: "{{k.line}}",
+                                                    traces: "{{k.tracesString}}",
+                                                },
+                                            {% endfor %}
+                                            {% for sinkedVulnGroup in dataSinkedLow %}
+                                                {% if sinkedVulnGroup[0].category == temp %}
+                                                    {
+                                                        {% set sharedName = sinkedVulnGroup[0].primaryFunction %}
+                                                        {% set joined = [sharedName, '(Shared Sink)']|join(', ') %}
+                                                        text: "{{joined}}",
+                                                        filename: "{{sinkedVulnGroup[0].sharedPath}}",
+                                                        items: [
+                                                            {% for vuln in sinkedVulnGroup %}
+                                                                {
+                                                                    text: "{{vuln.sourceFunction}}",
+                                                                    id: "{{vuln.instanceid}}",
+                                                                    filename: "{{vuln.filename}}",
+                                                                    line: "{{vuln.line}}",
+                                                                    traces: "{{vuln.tracesString}}",
+                                                                },
+                                                            {% endfor %}
+                                                        ]
+                                                    },
+                                                {% endif %}
+                                            {% endfor %}
+                                        ]
+                                    },
+                                {% endfor %}
+                            ]
+                        });
+
+
+                        var dataSourceMedium = new kendo.data.HierarchicalDataSource({
+                            sort: { field: "text", dir: "asc" },
+                            data: [
+                                {% for f in dataMedium %}
+                                    {
+                                        {% set temp = f[0].category %}
+                                        text: "{{temp}}",
+                                        items: [
+                                            {% for k in f %}
+                                                {
+                                                    text: "{{k.primaryFunction}}",
+                                                    id: "{{k.instanceid}}",
+                                                    filename: "{{k.filename}}",
+                                                    line: "{{k.line}}",
+                                                    traces: "{{k.tracesString}}",
+                                                },
+                                            {% endfor %}
+                                            {% for sinkedVulnGroup in dataSinkedMedium %}
+                                                {% if sinkedVulnGroup[0].category == temp %}
+                                                    {
+                                                        {% set sharedName = sinkedVulnGroup[0].primaryFunction %}
+                                                        {% set joined = [sharedName, '(Shared Sink)']|join(', ') %}
+                                                        text: "{{joined}}",
+                                                        filename: "{{sinkedVulnGroup[0].sharedPath}}",
+                                                        items: [
+                                                            {% for vuln in sinkedVulnGroup %}
+                                                                {
+                                                                    text: "{{vuln.sourceFunction}}",
+                                                                    id: "{{vuln.instanceid}}",
+                                                                    filename: "{{vuln.filename}}",
+                                                                    line: "{{vuln.line}}",
+                                                                    traces: "{{vuln.tracesString}}",
+                                                                },
+                                                            {% endfor %}
+                                                        ]
+                                                    },
+                                                {% endif %}
+                                            {% endfor %}
+                                        ]
+                                    },
+                                {% endfor %}
+                            ]
+                        });
+                        var dataSourceHigh = new kendo.data.HierarchicalDataSource({
+                            sort: { field: "text", dir: "asc" },
+                            data: [
+                                {% for f in dataHigh %}
+                                    {
+                                        {% set temp = f[0].category %}
+                                        text: "{{temp}}",
+                                        items: [
+                                            {% for k in f %}
+                                                {
+                                                    text: "{{k.primaryFunction}}",
+                                                    id: "{{k.instanceid}}",
+                                                    filename: "{{k.filename}}",
+                                                    line: "{{k.line}}",
+                                                    traces: "{{k.tracesString}}",
+                                                },
+                                            {% endfor %}
+                                            {% for sinkedVulnGroup in dataSinkedHigh %}
+                                                {% if sinkedVulnGroup[0].category == temp %}
+                                                    {
+                                                        {% set sharedName = sinkedVulnGroup[0].primaryFunction %}
+                                                        {% set joined = [sharedName, '(Shared Sink)']|join(', ') %}
+                                                        text: "{{joined}}",
+                                                        filename: "{{sinkedVulnGroup[0].sharedPath}}",
+                                                        items: [
+                                                            {% for vuln in sinkedVulnGroup %}
+                                                                {
+                                                                    text: "{{vuln.sourceFunction}}",
+                                                                    id: "{{vuln.instanceid}}",
+                                                                    filename: "{{vuln.filename}}",
+                                                                    line: "{{vuln.line}}",
+                                                                    traces: "{{vuln.tracesString}}",
+                                                                },
+                                                            {% endfor %}
+                                                        ]
+                                                    },
+                                                {% endif %}
+                                            {% endfor %}
+                                        ]
+                                    },
+                                {% endfor %}
+                            ]
+                        });
+                        var dataSourceCritical = new kendo.data.HierarchicalDataSource({
+                            sort: { field: "text", dir: "asc" },
+                            data: [
+                                {% for f in dataCritical %}
+                                    {
+                                        {% set temp = f[0].category %}
+                                        text: "{{temp}}",
+                                        items: [
+                                            {% for k in f %}
+                                                {
+                                                    text: "{{k.primaryFunction}}",
+                                                    id: "{{k.instanceid}}",
+                                                    filename: "{{k.filename}}",
+                                                    line: "{{k.line}}",
+                                                    traces: "{{k.tracesString}}",
+                                                },
+                                            {% endfor %}
+                                            {% for sinkedVulnGroup in dataSinkedCritical %}
+                                                {% if sinkedVulnGroup[0].category == temp %}
+                                                    {
+                                                        {% set sharedName = sinkedVulnGroup[0].primaryFunction %}
+                                                        {% set joined = [sharedName, '(Shared Sink)']|join(', ') %}
+                                                        text: "{{joined}}",
+                                                        filename: "{{sinkedVulnGroup[0].sharedPath}}",
+                                                        items: [
+                                                            {% for vuln in sinkedVulnGroup %}
+                                                                {
+                                                                    text: "{{vuln.sourceFunction}}",
+                                                                    id: "{{vuln.instanceid}}",
+                                                                    filename: "{{vuln.filename}}",
+                                                                    line: "{{vuln.line}}",
+                                                                    traces: "{{vuln.tracesString}}",
+                                                                },
+                                                            {% endfor %}
+                                                        ]
+                                                    },
+                                                {% endif %}
+                                            {% endfor %}
+                                        ]
+                                    },
+                                {% endfor %}
+                            ]
+                        });
+                    </script>
+
+                    <div  id="tabstrip" style="max-height:65%">
+                        <ul >
+                            <li class="k-state-active" id="critical">Critical [{{SeverityCritical}}]</li>
+                            <li  id="high">High [{{SeverityHigh}}]</li>
+                            <li  id="medium">Medium [{{SeverityMedium}}]</li>
+                            <li  id="low">Low [{{SeverityLow}}]</li>
+                        </ul>
+                        <div >
+                            <div  style="height:552px; overflow: auto">
+                                <div  id="treeview1"></div>
+                            </div>
+                            <script >
+                                $("#treeview1").kendoTreeView({
+                                    dataSource: dataSourceCritical,
+                                    autoScroll: true,
+
+                                    select: function(e) {
+                                        var dataItem = this.dataItem(e.node);
+                                        temp = dataItem.traces;
+
+                                        if( dataItem.filename != undefined) {
+
+                                            xmlhttp = new XMLHttpRequest();
+
+                                            xmlhttp.onreadystatechange = function() {
+                                                if (xmlhttp.readyState == 4) {
+                                                    var codeSource= pullCorrespondingCode(this,dataItem);
+                                                    xmlhttp1 = new XMLHttpRequest();
+
+                                                    xmlhttp1.open("GET", codeSource, true);
+
+                                                    xmlhttp1.send(null);
+
+                                                    xmlhttp1.onreadystatechange = function() {
+                                                        if (xmlhttp1.readyState == 4) {
+
+                                                            xmlDoc1 = xmlhttp1.responseText;
+                                                            $('#codeDisplayArea').text(xmlDoc1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            xmlhttp.open("GET", "index.xml", true);
+                                            xmlhttp.send();
+                                        }
+
+                                        if (temp != undefined) {
+
+                                            var traces = dataItem.traces;
+                                            createTraceTree( traces);
+                                            load( dataItem.id);
+
+                                        }
+                                        else {
+                                            treeviewTrace.dataSource.data([]);
+                                        }
+                                    },
+                                });
+                                function pullCorrespondingCode(xml,data) {
+                                    var xmlDoc = xml.responseXML;
+                                      var x = xmlDoc.getElementsByTagName("entry");
+                                      for (i = 0; i <x.length; i++) {
+                                        ma=x[i].attributes;
+                                        if(ma[0].value == data.filename){
+                                            console.log(x[i].childNodes[0].nodeValue);
+                                            return x[i].childNodes[0].nodeValue;
+                                        }
+
+                                      }
+
+                                }
+
+                                function load(id) {
+                                    var xmlhttp = new XMLHttpRequest();
+                                    xmlhttp.onreadystatechange = function() {
+                                        if (this.readyState == 4) {
+                                            var myObj = JSON.parse(this.responseText);
+                                                $('#descriptionDisplayArea').text("\n");
+                                                $('#descriptionDisplayArea').append(myObj[id].Abstract);
+                                                $('#descriptionDisplayArea').append(myObj[id].Ruleid);
+                                                $('#descriptionDisplayArea').append(myObj[id].Explanation);
+                                                $('#descriptionDisplayArea').append(myObj[id].Recommendations);
+                                                $('#descriptionDisplayArea').append(myObj[id].Tips);
+                                                $('#descriptionDisplayArea').append(myObj[id].References);
+                                        }
+                                    };
+                                    xmlhttp.open("GET", "jsonData.txt", true);
+                                    xmlhttp.send(null);
+                                }
+                            </script>
+
+                        </div>
+
+                        <div >
+                            <div  style="height:552px; overflow: auto">
+                                <div  id="treeview2"></div>
+                            </div>
+                            <script >
+                                $("#treeview2").kendoTreeView({
+                                    dataSource: dataSourceHigh,
+                                    autoScroll: true,
+
+                                    select: function(e) {
+                                        var dataItem = this.dataItem(e.node);
+                                        temp = dataItem.traces;
+
+                                        if( dataItem.filename != undefined) {
+
+                                            xmlhttp = new XMLHttpRequest();
+
+                                            xmlhttp.onreadystatechange = function() {
+                                                if (xmlhttp.readyState == 4) {
+                                                    var codeSource= pullCorrespondingCode(this,dataItem);
+                                                    xmlhttp1 = new XMLHttpRequest();
+                                                    xmlhttp1.open("GET", codeSource, true);
+
+                                                    xmlhttp1.send(null);
+
+                                                    xmlhttp1.onreadystatechange = function() {
+                                                        if (xmlhttp1.readyState == 4) {
+
+                                                            xmlDoc1 = xmlhttp1.responseText;
+                                                            $('#codeDisplayArea').text(xmlDoc1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            xmlhttp.open("GET", "index.xml", true);
+                                            xmlhttp.send();
+                                        }
+
+                                        if (temp != undefined) {
+
+                                            var traces = dataItem.traces;
+                                            createTraceTree( traces);
+                                            load( dataItem.id);
+                                        }
+                                        else {
+                                            treeviewTrace.dataSource.data([]);
+                                        }
+                                    },
+                                });
+                                function createTraceTree( traces) {
+                                    treeviewTrace.dataSource.data([]);
+
+                                    // Trace append and delete nodes
+
+                                    var trace = traces.split("+");
+                                    var k = 1;
+                                    for (var i = 0; i< trace.length - 1; i++) {
+                                        var nodes = trace[i].split("&");
+                                        treeviewTrace.append( {text: "Trace " + k});
+                                        var bool = false;
+                                        var tempParent = "";
+                                        for ( var j = 0; j < nodes.length -1; j++) {
+                                            if( nodes[j].indexOf('{') > -1) {
+                                                bool = true;
+                                            }
+                                            else if( nodes[j].indexOf('}') > -1) {
+                                                bool = false;
+                                            }
+                                            else{
+                                                tempStr = nodes[j];
+                                                tempArr = tempStr.split("/");
+                                                if( bool == true) {
+                                                    treeviewTrace.append({text: tempArr[tempArr.length - 1], filename: tempStr}, treeviewTrace.findByText(tempParent));
+                                                }
+                                                else {
+                                                    treeviewTrace.append({ text: tempArr[tempArr.length - 1], filename: tempStr}, treeviewTrace.findByText("Trace " + k));
+                                                    tempParent = tempArr[tempArr.length - 1];
+                                                }
+                                            }
+                                        }
+                                        k++;
+                                    }
+                                }
+                            </script>
+                        </div>
+
+                        <div >
+                            <div  style="height:552px; overflow: auto">
+                                <div  id="treeview3"></div>
+                            </div>
+                            <script >
+                                $("#treeview3").kendoTreeView({
+                                    dataSource: dataSourceMedium,
+                                    autoScroll: true,
+
+                                    select: function(e) {
+                                        var dataItem = this.dataItem(e.node);
+                                        temp = dataItem.traces;
+
+                                        if( dataItem.filename != undefined) {
+
+                                            xmlhttp = new XMLHttpRequest();
+
+                                            xmlhttp.onreadystatechange = function() {
+                                                if (xmlhttp.readyState == 4) {
+                                                    var codeSource= pullCorrespondingCode(this,dataItem);
+                                                    xmlhttp1 = new XMLHttpRequest();
+                                                    xmlhttp1.open("GET", codeSource, true);
+
+                                                    xmlhttp1.send(null);
+
+                                                    xmlhttp1.onreadystatechange = function() {
+                                                        if (xmlhttp1.readyState == 4) {
+
+                                                            xmlDoc1 = xmlhttp1.responseText;
+                                                            $('#codeDisplayArea').text(xmlDoc1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            xmlhttp.open("GET", "index.xml", true);
+                                            xmlhttp.send();
+                                        }
+
+                                        if (temp != undefined) {
+
+                                            var traces = dataItem.traces;
+                                            createTraceTree( traces);
+                                            load( dataItem.id);
+                                        }
+                                        else {
+                                            treeviewTrace.dataSource.data([]);
+                                        }
+                                    },
+                                });
+                            </script>
+                        </div>
+
+                        <div>
+                            <div  style="height:552px; overflow: auto">
+                                <div  id="treeview4"></div>
+                            </div>
+                            <script >
+                                $("#treeview4").kendoTreeView({
+                                    dataSource: dataSourceLow,
+                                    autoScroll: true,
+
+                                    select: function(e) {
+                                        var dataItem = this.dataItem(e.node);
+                                        temp = dataItem.traces;
+
+                                        if( dataItem.filename != undefined) {
+
+                                            xmlhttp = new XMLHttpRequest();
+
+                                            xmlhttp.onreadystatechange = function() {
+                                                if (xmlhttp.readyState == 4) {
+                                                    var codeSource= pullCorrespondingCode(this,dataItem);
+                                                    xmlhttp1 = new XMLHttpRequest();
+                                                    xmlhttp1.open("GET", codeSource, true);
+
+                                                    xmlhttp1.send(null);
+
+                                                    xmlhttp1.onreadystatechange = function() {
+                                                        if (xmlhttp1.readyState == 4) {
+
+                                                            xmlDoc1 = xmlhttp1.responseText;
+                                                            $('#codeDisplayArea').text(xmlDoc1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            xmlhttp.open("GET", "index.xml", true);
+                                            xmlhttp.send();
+                                        }
+
+                                        if (temp != undefined) {
+
+                                            var traces = dataItem.traces;
+                                            createTraceTree( traces);
+                                            load( dataItem.id);
+                                        }
+                                        else {
+                                            treeviewTrace.dataSource.data([]);
+                                        }
+                                    },
+                                });
+                            </script>
+                        </div>
+                    </div>
+
+                    <script >
+                        $("#tabstrip").kendoTabStrip({
+                            scrollable: false
+                        });
+                    </script>
+                </div>
+
+
+                <!-- Kodun gözükeceği div alanı sonu sağ kısım-->
+
+            </div>
+            <div  id="codeArea" class="col-sm-12 col-md-8 col-lg-8">
+                <textarea disabled id="codeDisplayArea" style="height: 100%"></textarea>
+            </div>
+        </div>
+
+    </div>
+    <div  class="container-fluid" style="height: 35%">
+        <div  class="row">
+            <div  class="col-sm-12 col-md-4 col-lg-4">
+                <div  style="height: 300px;">
+                    <div  style="height:100%; overflow: auto; border:1px solid black;">
+                        <div  id="treeviewTrace"></div>
+                    </div>
+                    <script >
+                        $("#treeviewTrace").kendoTreeView({
+                            dataSource: [],
+                            autoScroll: true,
+                            select: function(e) {
+                                var dataItem = this.dataItem(e.node);
+                                var path = dataItem.filename;
+                                var tempArr = path.split(" ");
+                                if( tempArr[1] != "-")
+                                    path = tempArr[1];
+                                else
+                                    path = tempArr[0];
+                                tempArr = path.split(":");
+                                path = tempArr[0];
+                                xmlhttp = new XMLHttpRequest();
+
+                                xmlhttp.onreadystatechange = function() {
+                                    var codeSource = "";
+                                    if (xmlhttp.readyState == 4) {
+                                        var xmlDoc = xmlhttp.responseXML;
+                                        var x = xmlDoc.getElementsByTagName("entry");
+                                        for (i = 0; i <x.length; i++) {
+                                            ma=x[i].attributes;
+
+                                            if(ma[0].value == path){
+                                                console.log(x[i].childNodes[0].nodeValue);
+                                                codeSource =  x[i].childNodes[0].nodeValue;
+                                                break;
+                                            }
+
+                                        }
+                                        console.log(codeSource);
+                                        xmlhttp1 = new XMLHttpRequest();
+                                        xmlhttp1.open("GET", codeSource, true);
+
+                                        xmlhttp1.send(null);
+
+                                        xmlhttp1.onreadystatechange = function() {
+                                            if (xmlhttp1.readyState == 4) {
+
+                                                xmlDoc1 = xmlhttp1.responseText;
+                                                $('#codeDisplayArea').text(xmlDoc1);
+                                            }
+                                        }
+                                    }
+
+                                }
+                                xmlhttp.open("GET", "index.xml", true);
+                                xmlhttp.send();
+                            },
+                        });
+                        var treeviewTrace = $("#treeviewTrace").data("kendoTreeView");
+                    </script>
+                </div>
+            </div>
+            <div  id="descriptionArea" class="col-sm-12 col-md-8 col-lg-8">
+                <pre  id="descriptionDisplayArea" style="height=100%"></pre>
+            </div>
+        </div>
+    </div>
+
+    <style >
+        #critical {
+            background-color: red;
+        }
+
+        #high {
+            background-color: orange;
+        }
+
+        #medium {
+            background-color: yellow;
+        }
+
+        #low {
+            background-color: forestgreen;
+        }
+
+        #codeArea {
+            height: 626px;
+            border: 1px solid black;
+        }
+
+        #descriptionArea {
+            height: 300px;
+            border: 1px solid black;
+        }
+
+        #descriptionDisplayArea {
+            height: 297px;
+            width: 1200px;
+            resize: none;
+            line-height: 18px;
+        }
+
+        #codeDisplayArea {
+            height: 592px;
+            width: 1200px;
+            resize: none;
+            line-height: 18px;
+        }
+
+        body {
+            font-size: 15px;
+        }
+
+
+.fa-11x {
+  font-size: 1.5rem; }
+    </style>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script  src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
